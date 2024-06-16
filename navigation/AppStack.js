@@ -7,10 +7,11 @@ import {IC_Detect, IC_Game, IC_Home} from '../src/assets/icons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import CUSTOM_COLORS from '../src/constants/color';
 import scale from '../src/constants/responsive';
-import DetectScreen from '../src/screens/detect_screen';
-import GameScreen from '../src/screens/game_screen';
 import {View} from 'react-native';
 import ResultScreen from '../src/screens/result_hgr_screen';
+import DetectScreen from '../src/screens/detect_screen';
+import {HelloWorld} from '../src/screens/test';
+import GameScreen from '../src/screens/game_screen';
 
 const Tab = createBottomTabNavigator();
 
@@ -91,6 +92,13 @@ const DetectStack = () => {
         name="Result"
         component={ResultScreen}
         options={{headerShown: false}}
+        initialParams={{passedImg: null, passedFile: null}}
+      />
+      <Stack.Screen
+        name="Test"
+        component={HelloWorld}
+        options={{headerShown: false}}
+        initialParams={{passedImg: null, passedFile: null, w: 0, h: 0}}
       />
     </Stack.Navigator>
   );
@@ -100,7 +108,7 @@ const GameStack = () => {
     <Stack.Navigator initialRouteName="Game">
       <Stack.Screen
         name="Game"
-        component={GameScreen}
+        component={Game}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

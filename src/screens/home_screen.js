@@ -15,6 +15,7 @@ import {IC_Bell, IC_Game, IC_Info} from '../assets/icons';
 import scale from '../constants/responsive';
 import {IMG_HGR_EX} from '../assets/imgs';
 import SmallButton from '../components/small_button';
+import {Screen} from 'react-native-screens';
 
 export class HomeScreen extends Component {
   render() {
@@ -36,11 +37,11 @@ export class HomeScreen extends Component {
 
             <SmallButton
               title="Try Now"
-              onPressed={() =>
+              onPressed={() => {
                 this.props.navigation.navigate('DetectStack', {
                   screen: 'Detect',
-                })
-              }
+                });
+              }}
             />
           </View>
           <View style={styles.imgIllu}>
