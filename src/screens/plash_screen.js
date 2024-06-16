@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
     fontSize: CUSTOM_SIZES.xLarge,
     alignSelf: 'center',
     alignItems: 'center',
+    color: CUSTOM_COLORS.white,
   },
 });
 

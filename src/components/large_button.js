@@ -7,7 +7,7 @@ import CUSTOM_SIZES from '../constants/size';
 
 const LargeButton = props => {
   return (
-    <TouchableOpacity style={styles.btn} onPress={props.onrPessed}>
+    <TouchableOpacity style={styles.btn} onPress={props.onPressed}>
       <Text style={styles.txtBtn}>{props.title}</Text>
     </TouchableOpacity>
   );
