@@ -40,20 +40,80 @@ import axios from 'axios';
 import {Circle} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
 import Bbox from '../components/bbbox';
+import {
+  handleCameraLaunch,
+  openImagePicker,
+} from '../assets/ultilities/importImage';
 
 const ResultScreen = ({route}) => {
   const navigation = useNavigation();
 
-  const {passedImg, passedFile, w, h} = route.params;
-  const [selectedImg, setSelectedImg] = useState(passedImg);
+  //file
+  let file = {
+    uri: '', // e.g. 'file:///path/to/file/image123.jpg'
+    name: '', // e.g. 'image123.jpg',
+    type: '', // e.g. 'image/jpg'
+  };
+
+  const {passedFile, w, h} = route.params;
+  const [selectedImg, setSelectedImg] = useState(passedFile.uri);
   const [imgWidth, setImgWidth] = useState(w);
   const [imgHeight, setImgHeight] = useState(h);
+  const [cvWidth, setCvWidth] = useState(0);
+  const [cvHeight, setCvHeight] = useState(0);
+  const [xImg, setXImg] = useState(0);
   const [selectedFile, setSelectedFile] = useState(passedFile);
   const [isLoading, SetIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-  const canvasRef = useRef(null);
-  let scale = 2;
+  const [result, setResult] = useState([]);
+  console.log(imgWidth, imgHeight);
+  console.log(cvWidth, cvHeight);
 
+  const data = [
+    {
+      id: 1,
+      box: [
+        256.91619873046875, 316.115478515625, 270.34039306640625,
+        234.330810546875,
+      ],
+      class_id: 10,
+      class_name: 'peace_inverted',
+      confidence: 0.7765809297561646,
+    },
+  ];
+  const data2 = [
+    {
+      key: 1,
+      box: [
+        468.29046630859375, 159.35006713867188, 258.2159423828125,
+        259.9259033203125,
+      ],
+      class_id: 10,
+      class_name: 'peace_inverted',
+      confidence: 0.9093440771102905,
+    },
+    {
+      key: 2,
+      box: [
+        209.34437561035156, 238.21836853027344, 244.72512817382812,
+        246.98403930664062,
+      ],
+      class_id: 16,
+      class_name: 'two_up',
+      confidence: 0.9065592885017395,
+    },
+  ];
+  const data3 = [
+    {
+      box: [
+        232.71920776367188, 330.4185791015625, 159.8980255126953,
+        175.26748657226562,
+      ],
+      class_id: 0,
+      class_name: 'call',
+      confidence: 0.896122932434082,
+    },
+  ];
   // predict
   const predict = async () => {
     var fileData = new FormData();
@@ -74,89 +134,23 @@ const ResultScreen = ({route}) => {
       if (data) {
         console.log(data);
         SetIsLoading(false);
-        //   // canvas.width = selectedFile.width;
-        //   // canvas.height = selectedFile.height;
-        //   // ctx.drawImage(
-        //   //   selectedFile,
-        //   //   0,
-        //   //   0,
-        //   //   selectedFile.width,
-        //   //   selectedFile.height,
-        //   // );
-        data.map(dt => (
-          <Canvas ref={canvasRef} style={styles.uploadImg}>
-            <Image
-              image={image}
-              fit="cover"
-              x={0}
-              y={0}
-              height={imgHeight}
-              width={imgWidth}
-            />
-            <Group style="stroke" strokeWidth={1}>
-              <Rect
-                x={dt.box[0]}
-                y={dt.box[1]}
-                width={dt.box[3]}
-                height={dt.box[4]}
-                color="red"
-              />
-            </Group>
-
-            <RNSText x={0} y={fontSize} text="Hello World" font={font} />
-          </Canvas>
-        ));
+        setResult(data);
       }
     } catch (err) {
       SetIsLoading(false);
       console.log(err);
       setErrorMessage(err.message);
     }
-    // SetIsLoading(true);
-    // let res = await fetch(`https://handgestureserver.onrender.com/predict`, {
-    //   method: 'post',
-    //   body: fileData,
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data; ',
-    //   },
-    // });
-    // if (res) SetIsLoading(false);
-    // console.log('res', res);
-    // let responseJson = await res.json();
-    // if (responseJson.status == 1) {
-    //   alert('Upload Successful');
-    // }
   };
 
-  //pick img
-  const openImagePicker = () => {
-    const options = {
-      mediaType: 'photo',
-      includeBase64: false,
-      maxHeight: 2000,
-      maxWidth: 2000,
-    };
-
-    launchImageLibrary(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('Image picker error: ', response.error);
-      } else {
-        let imageUri = response.uri || response.assets?.[0]?.uri;
-        let base64Image = response.base64 | response.assets?.[0]?.base64;
-        setSelectedImg(imageUri);
-        setSelectedFile(response.assets?.[0]);
-
-        console.log('uri', imageUri);
-      }
-    });
-  };
   const image = useImage(selectedImg);
 
-  const {width, height} = Dimensions.get('window');
-  const fontSize = 32;
-  const font = useFont(require('../assets/fonts/Poppins-Black.ttf'), fontSize);
+  // const {width, height} = Dimensions.get('window');
+  const onLayout = event => {
+    const {x, y, height, width} = event.nativeEvent.layout;
+    setCvHeight(height);
+    setCvWidth(width);
+  };
   return (
     <SafeAreaView style={styles.contaier}>
       <ImageBackground
@@ -167,28 +161,31 @@ const ResultScreen = ({route}) => {
         <View style={styles.imgContainer}>
           {/* <Image style={styles.uploadImg} source={{uri: selectedImg}} /> */}
           {isLoading ? <ActivityIndicator size="large" /> : null}
-          <Canvas ref={canvasRef} style={styles.uploadImg}>
+          <Canvas style={styles.uploadImg} onLayout={onLayout}>
             <Image
               image={image}
-              fit="cover"
+              fit="contain"
               x={0}
               y={0}
-              height={imgHeight}
-              width={imgWidth}
+              height={cvHeight}
+              width={cvWidth}
             />
-            {/* <Group style="stroke" strokeWidth={1}>
-              <Rect x={0} y={0} width={256} height={256} color="red" />
-            </Group> */}
-            <Bbox
-              x={256.91619873046875}
-              y={316.115478515625}
-              w={270.34039306640625}
-              h={234.330810546875}
-              imgW={w}
-              imgH={h}
-            />
-
-            {/* <RNSText x={0} y={fontSize} text="Hello World" font={font} /> */}
+            {result.map(dt => {
+              return (
+                <Bbox
+                  key={dt.class_id}
+                  x={dt.box[0]}
+                  y={dt.box[1]}
+                  w={dt.box[2]}
+                  h={dt.box[3]}
+                  imgW={imgWidth}
+                  imgH={imgHeight}
+                  scale={cvWidth / imgWidth}
+                  label={dt.class_name}
+                  xImg={(cvHeight - (cvWidth / imgWidth) * imgHeight) / 2}
+                />
+              );
+            })}
           </Canvas>
         </View>
         <View style={styles.actionContainer}>
@@ -203,10 +200,34 @@ const ResultScreen = ({route}) => {
               }}
             />
           </View>
-          <LargeButton
-            title="Upload another image"
-            onPressed={() => openImagePicker()}
-          />
+          <View style={styles.rowBtn}>
+            <SmallButton
+              title="Upload new "
+              onPressed={async () => {
+                let value = await openImagePicker();
+                if (value.file.name != '') {
+                  setSelectedFile(value.file);
+                  setSelectedImg(value.file.uri);
+                  setImgWidth(value.wImg);
+                  setImgHeight(value.hImg);
+                  setResult([]);
+                }
+              }}
+            />
+            <SmallButton
+              title="Take new "
+              onPressed={async () => {
+                let value = await handleCameraLaunch();
+                if (value.file.name != '') {
+                  setSelectedFile(value.file);
+                  setSelectedImg(value.file.uri);
+                  setImgWidth(value.wImg);
+                  setImgHeight(value.hImg);
+                  setResult([]);
+                }
+              }}
+            />
+          </View>
         </View>
       </ImageBackground>
     </SafeAreaView>
