@@ -14,56 +14,22 @@ import CUSTOM_SIZES from '../constants/size';
 import {IMG_ElementDetect, IMG_HGR_EX} from '../assets/imgs';
 import scale from '../constants/responsive';
 import {IC_Upload} from '../assets/icons';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {useNavigation} from '@react-navigation/native';
+import SmallButton from '../components/small_button';
+import {
+  handleCameraLaunch,
+  openImagePicker,
+} from '../assets/ultilities/importImage';
 
 const DetectScreen = () => {
   const navigation = useNavigation();
-  const [selectedImg, setSelectedImg] = useState(null);
-  const [passedFile, setPassedFile] = useState(null);
   let file = {
     uri: '', // e.g. 'file:///path/to/file/image123.jpg'
     name: '', // e.g. 'image123.jpg',
     type: '', // e.g. 'image/jpg'
   };
 
-  // const [imgPicked, setImgPicked] = useState(new Image());
-  const openImagePicker = () => {
-    const options = {
-      mediaType: 'photo',
-      includeBase64: false,
-      maxHeight: 2000,
-      maxWidth: 2000,
-    };
-
-    launchImageLibrary(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('Image picker error: ', response.error);
-      } else {
-        let imageUri = response.uri || response.assets?.[0]?.uri;
-        setSelectedImg(imageUri);
-        setPassedFile(response.assets?.[0]);
-
-        file.uri = imageUri;
-        file.type = response.type || response.assets?.[0]?.type;
-        file.name = response.fileName || response.assets?.[0]?.fileName;
-        console.log('uri', imageUri);
-        console.log('img', response.assets?.[0]);
-        console.log('file', passedFile);
-        navigation.navigate('DetectStack', {
-          screen: 'Result',
-          params: {
-            passedImg: imageUri,
-            passedFile: file,
-            w: response.assets?.[0]?.width,
-            h: response.assets?.[0]?.height,
-          },
-        });
-      }
-    });
-  };
   return (
     <SafeAreaView style={styles.contaier}>
       <ImageBackground
@@ -80,17 +46,48 @@ const DetectScreen = () => {
           <View style={styles.illusContainer}>
             <TouchableOpacity
               style={styles.imgContainer}
-              onPress={() =>
+              onPress={async () =>
                 // this.props.navigation.navigate('DetectStack', {
                 //   screen: 'Result',
                 // })
                 {
-                  openImagePicker();
+                  let value = await openImagePicker();
+                  // console.log(value);
+                  if (value.file.name != '') {
+                    console.log('value', value);
+                    navigation.navigate('DetectStack', {
+                      screen: 'Result',
+                      params: {
+                        passedFile: value.file,
+                        w: value.wImg,
+                        h: value.hImg,
+                      },
+                    });
+                  }
                 }
               }>
               <IC_Upload />
               <Text style={styles.txtMedium}>Upload your image</Text>
             </TouchableOpacity>
+            <Text>OR</Text>
+            <SmallButton
+              onPressed={async () => {
+                let value = await handleCameraLaunch();
+                // console.log(value);
+                if (value.file.name != '' && value.file.name != undefined) {
+                  console.log('value', value);
+                  navigation.navigate('DetectStack', {
+                    screen: 'Result',
+                    params: {
+                      passedFile: value.file,
+                      w: value.wImg,
+                      h: value.hImg,
+                    },
+                  });
+                }
+              }}
+              title="Take picture"
+            />
           </View>
         </View>
       </ImageBackground>
@@ -163,7 +160,7 @@ const styles = StyleSheet.create({
   imgContainer: {
     //backgroundColor: 'white',
     width: '100%',
-    height: '100%',
+    height: '50%',
     alignItems: 'center',
     justifyContent: 'center',
   },

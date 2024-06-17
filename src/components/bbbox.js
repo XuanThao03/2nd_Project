@@ -6,6 +6,7 @@ import {
   Image,
   Rect,
   Text,
+  scale,
   useFont,
 } from '@shopify/react-native-skia';
 
@@ -20,20 +21,23 @@ const Bbox = props => {
   const top = imgScaleY * (props.y - props.h / 2);
   const right = imgScaleX * (props.x + props.w / 2);
   const bottom = imgScaleY * (props.y + props.h / 2);
+  console.log(props.scale);
+  console.log('xImage', props.xImg);
+  console.log('top', top * props.scale);
   return (
     <Group style="stroke" strokeWidth={1}>
       <Text
-        x={left}
-        y={top - 5}
-        text="Hello World"
+        x={left * props.scale}
+        y={top * props.scale - 5 + props.xImg}
+        text={props.label}
         font={font}
         color={'white'}
       />
       <Rect
-        x={left}
-        y={top}
-        width={right - left}
-        height={bottom - top}
+        x={left * props.scale}
+        y={top * props.scale + props.xImg}
+        width={(right - left) * props.scale}
+        height={(bottom - top) * props.scale}
         color="red"
       />
     </Group>

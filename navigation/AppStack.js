@@ -98,7 +98,7 @@ const DetectStack = () => {
         name="Test"
         component={HelloWorld}
         options={{headerShown: false}}
-        initialParams={{passedImg: null, passedFile: null, w: 0, h: 0}}
+        initialParams={{passedFile: null, w: 0, h: 0}}
       />
     </Stack.Navigator>
   );
