@@ -14,6 +14,7 @@ import {
   Camera,
   useCameraDevice,
   useCameraPermission,
+  useFrameProcessor
 } from 'react-native-vision-camera';
 import HomeScreen from './home_screen';
 
@@ -21,6 +22,12 @@ const GameScreen = () => {
   const device = useCameraDevice('back');
   const {hasPermission} = useCameraPermission();
   if (!hasPermission) return <HomeScreen />;
+
+  const frameProcessor = useFrameProcessor((frame) => {
+    'worklet'
+    console.log(`Frame: ${frame.width}x${frame.height} (${frame.pixelFormat})`)
+  }, [])
+
   // if (device == null) return <NoCameraDeviceError />;
   return (
     <SafeAreaView style={styles.contaier}>
@@ -31,10 +38,12 @@ const GameScreen = () => {
         <Text style={styles.title}>{'Car Driving'}</Text>
         <Canvas style={styles.cv}></Canvas>
         <Camera
+          outputOrientation="device"
           video={true}
           style={StyleSheet.absoluteFill}
           device={device}
           isActive={true}
+          frameProcessor={frameProcessor}
         />
       </ImageBackground>
     </SafeAreaView>
