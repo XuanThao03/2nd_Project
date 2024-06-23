@@ -9,12 +9,14 @@ import React from 'react';
 import {FONT_FAMILY} from '../constants/font';
 import CUSTOM_SIZES from '../constants/size';
 import CUSTOM_COLORS from '../constants/color';
-import {Canvas} from '@shopify/react-native-skia';
+import {Canvas, Skia} from '@shopify/react-native-skia';
 import {
   Camera,
   useCameraDevice,
   useCameraPermission,
-  useFrameProcessor
+  useFrameProcessor,
+  runAtTargetFps,
+  useSkiaFrameProcessor
 } from 'react-native-vision-camera';
 import {
   Tensor,
@@ -36,7 +38,25 @@ function modelToString(model: TensorflowModel): string {
   )
 }
 
-
+const classes = ["call",
+  "dislike",
+  "fist",
+  "four",
+  "like",
+  "mute",
+  "ok",
+  "one",
+  "palm",
+  "peace",
+  "peace_inverted",
+  "rock",
+  "stop",
+  "stop_inverted",
+  "three",
+  "three2",
+  "two_up",
+  "two_up_inverted",
+  "no_gesture"];
 
 const GameScreen = () => {
   const { hasPermission, requestPermission } = useCameraPermission()
@@ -44,7 +64,7 @@ const GameScreen = () => {
   if (!hasPermission) return <HomeScreen />;
 
 
-  const model = useTensorflowModel(require('../assets/model/efficientdet.tflite'))
+  const model = useTensorflowModel(require('../assets/model/HG_gelan_c_10ep_best_striped_float16.tflite'))
   const actualModel = model.state === 'loaded' ? model.model : undefined
 
   React.useEffect(() => {
@@ -61,19 +81,21 @@ const GameScreen = () => {
         // model is still loading...
         return
       }
-
-      console.log(`Running inference on ${frame}`)
-      const resized = resize(frame, {
-        scale: {
-          width: 320,
-          height: 320,
-        },
-        pixelFormat: 'rgb',
-        dataType: 'uint8',
+      runAtTargetFps(60, () => {
+        'worklet'
+        console.log(`Running inference on ${frame}`)
+        const resized = resize(frame, {
+          scale: {
+            width: 640,
+            height: 640,
+          },
+          pixelFormat: 'rgb',
+          dataType: 'float32',
+        })
+        
+        const result = actualModel.runSync([resized])
+        console.log("result: " + result[0].length)
       })
-      const result = actualModel.runSync([resized])
-      const num_detections = result[3]?.[0] ?? 0
-      console.log('Result: ' + num_detections)
     },
     [actualModel]
   )
