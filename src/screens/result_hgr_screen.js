@@ -14,7 +14,15 @@ import CUSTOM_COLORS from '../constants/color';
 import CUSTOM_SIZES from '../constants/size';
 import {FONT_FAMILY} from '../constants/font';
 import scale from '../constants/responsive';
-import {IC_Upload} from '../assets/icons';
+import {
+  IC_Camera,
+  IC_Download,
+  IC_Home,
+  IC_Share,
+  IC_Upload,
+  IC_smallDownload,
+  IC_smallUpload,
+} from '../assets/icons';
 import {IMG_HGR_EX2} from '../assets/imgs';
 import SmallButton from '../components/small_button';
 import LargeButton from '../components/large_button';
@@ -44,9 +52,13 @@ import {
   handleCameraLaunch,
   openImagePicker,
 } from '../assets/ultilities/importImage';
+import {ReactNativeZoomableView} from '@openspacelabs/react-native-zoomable-view';
+import {downloadImage, shareImage} from '../assets/ultilities/share_download';
+import CircleButton from '../components/circle_button';
 
 const ResultScreen = ({route}) => {
   const navigation = useNavigation();
+  const viewRef = useRef();
 
   //file
   let file = {
@@ -157,11 +169,13 @@ const ResultScreen = ({route}) => {
         resizeMode="cover"
         style={styles.image}
         source={require('../assets/imgs/elementBg2.png')}>
+        {/* <View style={{flexDirection: 'row'}}> */}
         <Text style={styles.title}>{'Hand Gesture \nRecognition'}</Text>
+
         <View style={styles.imgContainer}>
           {/* <Image style={styles.uploadImg} source={{uri: selectedImg}} /> */}
           {isLoading ? <ActivityIndicator size="large" /> : null}
-          <Canvas style={styles.uploadImg} onLayout={onLayout}>
+          <Canvas style={styles.uploadImg} onLayout={onLayout} ref={viewRef}>
             <Image
               image={image}
               fit="contain"
@@ -189,20 +203,25 @@ const ResultScreen = ({route}) => {
           </Canvas>
         </View>
         <View style={styles.actionContainer}>
-          <View style={styles.rowBtn}>
+          <View style={{alignItems: 'center', paddingBottom: scale(10, 'h')}}>
             <SmallButton title="Predict" onPressed={predict} />
-            <SmallButton
-              title="Download"
+          </View>
+
+          <View style={styles.rowBtn}>
+            <CircleButton
+              icon={<IC_Download />}
               onPressed={() => {
-                navigation.navigate('DetectStack', {
-                  screen: 'Test',
-                });
+                downloadImage(viewRef);
               }}
             />
-          </View>
-          <View style={styles.rowBtn}>
-            <SmallButton
-              title="Upload new "
+            <CircleButton
+              icon={<IC_Share />}
+              onPressed={() => {
+                shareImage(viewRef);
+              }}
+            />
+            <CircleButton
+              icon={<IC_smallUpload />}
               onPressed={async () => {
                 let value = await openImagePicker();
                 if (value.file.name != '') {
@@ -214,8 +233,8 @@ const ResultScreen = ({route}) => {
                 }
               }}
             />
-            <SmallButton
-              title="Take new "
+            <CircleButton
+              icon={<IC_Camera />}
               onPressed={async () => {
                 let value = await handleCameraLaunch();
                 if (value.file.name != '') {
@@ -276,7 +295,7 @@ const styles = StyleSheet.create({
     borderRadius: scale(45, 'w'),
     borderWidth: scale(0.75, 'w'),
     borderColor: CUSTOM_COLORS.hover,
-    backgroundColor: 'yellow',
+    // backgroundColor: 'yellow',
   },
   btn: {
     height: scale(43, 'h'),
@@ -284,5 +303,8 @@ const styles = StyleSheet.create({
   rowBtn: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    // backgroundColor: 'yellow',
+    paddingVertical: scale(10, 'h'),
   },
 });
