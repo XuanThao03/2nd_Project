@@ -783,7 +783,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-arrow-functions@npm:^7.0.0, @babel/plugin-transform-arrow-functions@npm:^7.24.7":
+"@babel/plugin-transform-arrow-functions@npm:^7.0.0, @babel/plugin-transform-arrow-functions@npm:^7.0.0-0, @babel/plugin-transform-arrow-functions@npm:^7.24.7":
   version: 7.24.7
   resolution: "@babel/plugin-transform-arrow-functions@npm:7.24.7"
   dependencies:
@@ -1125,7 +1125,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-nullish-coalescing-operator@npm:^7.24.7":
+"@babel/plugin-transform-nullish-coalescing-operator@npm:^7.0.0-0, @babel/plugin-transform-nullish-coalescing-operator@npm:^7.24.7":
   version: 7.24.7
   resolution: "@babel/plugin-transform-nullish-coalescing-operator@npm:7.24.7"
   dependencies:
@@ -1187,7 +1187,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-optional-chaining@npm:^7.24.7":
+"@babel/plugin-transform-optional-chaining@npm:^7.0.0-0, @babel/plugin-transform-optional-chaining@npm:^7.24.7":
   version: 7.24.7
   resolution: "@babel/plugin-transform-optional-chaining@npm:7.24.7"
   dependencies:
@@ -1335,7 +1335,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-shorthand-properties@npm:^7.0.0, @babel/plugin-transform-shorthand-properties@npm:^7.24.7":
+"@babel/plugin-transform-shorthand-properties@npm:^7.0.0, @babel/plugin-transform-shorthand-properties@npm:^7.0.0-0, @babel/plugin-transform-shorthand-properties@npm:^7.24.7":
   version: 7.24.7
   resolution: "@babel/plugin-transform-shorthand-properties@npm:7.24.7"
   dependencies:
@@ -1369,7 +1369,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-template-literals@npm:^7.24.7":
+"@babel/plugin-transform-template-literals@npm:^7.0.0-0, @babel/plugin-transform-template-literals@npm:^7.24.7":
   version: 7.24.7
   resolution: "@babel/plugin-transform-template-literals@npm:7.24.7"
   dependencies:
@@ -1569,7 +1569,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-typescript@npm:^7.13.0":
+"@babel/preset-typescript@npm:^7.13.0, @babel/preset-typescript@npm:^7.16.7":
   version: 7.24.7
   resolution: "@babel/preset-typescript@npm:7.24.7"
   dependencies:
@@ -5594,7 +5594,9 @@ __metadata:
     react: 18.2.0
     react-native: 0.74.2
     react-native-canvas: ^0.1.40
+    react-native-fast-tflite: ^1.2.0
     react-native-image-picker: ^7.1.2
+    react-native-reanimated: ^3.12.1
     react-native-safe-area-context: ^4.10.4
     react-native-screens: ^3.31.1
     react-native-svg: ^15.3.0
@@ -5603,6 +5605,7 @@ __metadata:
     react-native-worklets-core: ^1.3.3
     react-test-renderer: 18.2.0
     typescript: 5.0.4
+    vision-camera-resize-plugin: ^3.1.0
   languageName: unknown
   linkType: soft
 
@@ -8328,6 +8331,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-fast-tflite@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "react-native-fast-tflite@npm:1.2.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: b4b7f567adb8232acc8e5ec42579300ede65803dfa8fdad684a9bf54de5bc9cd0f61e6427e1ef882813d26cbeba7d0392b462098f5c910f143db005476d1e4e0
+  languageName: node
+  linkType: hard
+
 "react-native-image-picker@npm:^7.1.2":
   version: 7.1.2
   resolution: "react-native-image-picker@npm:7.1.2"
@@ -8335,6 +8348,26 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: af52328b7cb06c28549442f0d923cfa92dde8d5a968a642336df4c882f81adbf0e5e606a14de27f96883a76fa1e03230061c4080011c9107942edebc8e09c478
+  languageName: node
+  linkType: hard
+
+"react-native-reanimated@npm:^3.12.1":
+  version: 3.12.1
+  resolution: "react-native-reanimated@npm:3.12.1"
+  dependencies:
+    "@babel/plugin-transform-arrow-functions": ^7.0.0-0
+    "@babel/plugin-transform-nullish-coalescing-operator": ^7.0.0-0
+    "@babel/plugin-transform-optional-chaining": ^7.0.0-0
+    "@babel/plugin-transform-shorthand-properties": ^7.0.0-0
+    "@babel/plugin-transform-template-literals": ^7.0.0-0
+    "@babel/preset-typescript": ^7.16.7
+    convert-source-map: ^2.0.0
+    invariant: ^2.2.4
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+    react: "*"
+    react-native: "*"
+  checksum: 91575b3a20a5878f42d0302cf304ed46ff35c12ce717018c0bfb6af047bf675f224ab95de778daae483b139e66c5290a661635c06304065879b02a5926243e1c
   languageName: node
   linkType: hard
 
@@ -9860,6 +9893,18 @@ __metadata:
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: ae0123222c6df65b437669d63dfa8c36cee20a504101b2fcd97b8bf76f91259c17f9f2b4d70a1e3c6bbcee7f51b28392833adb6b2770b23b01abec84e369660b
+  languageName: node
+  linkType: hard
+
+"vision-camera-resize-plugin@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "vision-camera-resize-plugin@npm:3.1.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-vision-camera: ">=4.0.1"
+    react-native-worklets-core: ">=1.2.0"
+  checksum: 34187b1f18987f22a4260fff2a3267eb0f4ecbd121b949cbb7bc41ef7b3b26d9a50632ba6ddfc7d00eedcef248d11ad58f676541a71d835a41635a0579790a9b
   languageName: node
   linkType: hard
 
