@@ -1,26 +1,26 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import scale from '../constants/responsive';
+import {scale} from '@shopify/react-native-skia';
 import CUSTOM_COLORS from '../constants/color';
 import {FONT_FAMILY} from '../constants/font';
 import CUSTOM_SIZES from '../constants/size';
 
-const SmallButton = props => {
+const CircleButton = props => {
   return (
     <TouchableOpacity style={styles.btn} onPress={props.onPressed}>
-      <Text style={styles.txtBtn}>{props.title}</Text>
+      {props.icon}
     </TouchableOpacity>
   );
 };
 
-export default SmallButton;
+export default CircleButton;
 
 const styles = StyleSheet.create({
   btn: {
-    height: scale(43, 'h'),
-    width: scale(125, 'w'),
+    height: 44,
+    width: 44,
     backgroundColor: CUSTOM_COLORS.hover,
-    borderRadius: scale(15, 'w'),
+    borderRadius: 32,
     marginTop: scale(20, 'h'),
     justifyContent: 'center',
     alignItems: 'center',
@@ -31,6 +31,5 @@ const styles = StyleSheet.create({
     fontSize: CUSTOM_SIZES.medium,
     textAlign: 'center',
     textAlignVertical: 'center',
-    color: CUSTOM_COLORS.white,
   },
 });
