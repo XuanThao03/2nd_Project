@@ -30,12 +30,12 @@ const GameScreen = () => {
         source={require('../assets/imgs/elementBg2.png')}>
         <Text style={styles.title}>{'Car Driving'}</Text>
         <Canvas style={styles.cv}></Canvas>
-        <Camera
+        {/* <Camera
           video={true}
           style={StyleSheet.absoluteFill}
           device={device}
           isActive={true}
-        />
+        /> */}
       </ImageBackground>
     </SafeAreaView>
   );
