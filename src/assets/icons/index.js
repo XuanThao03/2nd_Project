@@ -4,3 +4,7 @@ export {default as IC_Detect} from './IC_Detect.js';
 export {default as IC_Game} from './IC_Game.js';
 export {default as IC_Info} from './IC_Infor.js';
 export {default as IC_Upload} from './IC_Upload.js';
+export {default as IC_Download} from './IC_Download.js';
+export {default as IC_Share} from './IC_Share.js';
+export {default as IC_smallUpload} from './IC_smallUpload.js';
+export {default as IC_Camera} from './IC_Camera.js';
