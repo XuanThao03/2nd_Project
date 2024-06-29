@@ -8,3 +8,4 @@ export {default as IC_Download} from './IC_Download.js';
 export {default as IC_Share} from './IC_Share.js';
 export {default as IC_smallUpload} from './IC_smallUpload.js';
 export {default as IC_Camera} from './IC_Camera.js';
+export {default as IC_InforLine} from './IC_InforLine.js';

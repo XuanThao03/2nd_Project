@@ -25,10 +25,15 @@ export class HomeScreen extends Component {
           resizeMode="cover"
           style={styles.image}
           source={require('../assets/imgs/elementBg2.png')}>
-          <View style={styles.appBar}>
+          {/* <View style={styles.appBar}>
             <IC_Bell style={styles.topIC} />
-            <IC_Info style={styles.topIC} />
-          </View>
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate('InforScreen');
+              }}>
+              <IC_Info style={styles.topIC} />
+            </TouchableOpacity>
+          </View> */}
           <View style={styles.introContainer}>
             <Text style={styles.txtIntro}>AN</Text>
             <Text style={styles.txtIntro}>ADVANCED AI</Text>

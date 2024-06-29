@@ -3,7 +3,7 @@ import PlashScreen from '../src/screens/plash_screen';
 import HomeScreen from '../src/screens/home_screen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {IC_Detect, IC_Game, IC_Home} from '../src/assets/icons';
+import {IC_Detect, IC_Game, IC_Home, IC_InforLine} from '../src/assets/icons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import CUSTOM_COLORS from '../src/constants/color';
 import scale from '../src/constants/responsive';
@@ -12,6 +12,8 @@ import ResultScreen from '../src/screens/result_hgr_screen';
 import DetectScreen from '../src/screens/detect_screen';
 import {HelloWorld} from '../src/screens/test';
 import GameScreen from '../src/screens/game_screen';
+import IntroduceScreen from '../src/screens/about_screen';
+import AboutScreen from '../src/screens/about_screen';
 
 const Tab = createBottomTabNavigator();
 
@@ -33,48 +35,63 @@ const HomeTabs = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({focused}) => (
-            <View>
-              {/* <IC_Home
-                fill={focused ? CUSTOM_COLORS.primary : CUSTOM_COLORS.lightGray}
-                fill2={
-                  focused ? CUSTOM_COLORS.primary : 'transparent'
-                }></IC_Home> */}
-              <IC_Home />
-            </View>
-          ),
+          tabBarIcon: ({focused}) =>
+            focused ? (
+              <View
+                style={{
+                  padding: scale(7, 'w'),
+                  backgroundColor: CUSTOM_COLORS.hover,
+                  borderRadius: scale(50, 'h'),
+                }}>
+                <IC_Home />
+              </View>
+            ) : (
+              <View>
+                <IC_Home />
+              </View>
+            ),
         }}
       />
       <Tab.Screen
         name="DetectStack"
         component={DetectStack}
         options={{
-          tabBarIcon: ({focused}) => (
-            <View>
-              {/* <IC_Detect
-                fill={focused ? CUSTOM_COLORS.primary : CUSTOM_COLORS.lightGray}
-                fill2={
-                  focused ? CUSTOM_COLORS.primary : 'transparent'
-                }></IC_Detect> */}
-              <IC_Detect />
-            </View>
-          ),
+          tabBarIcon: ({focused}) =>
+            focused ? (
+              <View
+                style={{
+                  padding: scale(7, 'w'),
+                  backgroundColor: CUSTOM_COLORS.hover,
+                  borderRadius: scale(50, 'h'),
+                }}>
+                <IC_Detect />
+              </View>
+            ) : (
+              <View>
+                <IC_Detect />
+              </View>
+            ),
         }}
       />
       <Tab.Screen
-        name="Game"
-        component={GameScreen}
+        name="About"
+        component={AboutScreen}
         options={{
-          tabBarIcon: ({focused}) => (
-            <View>
-              {/* <IC_Game
-                fill={focused ? CUSTOM_COLORS.primary : CUSTOM_COLORS.lightGray}
-                fill2={
-                  focused ? CUSTOM_COLORS.primary : 'transparent'
-                }></IC_Game> */}
-              <IC_Game />
-            </View>
-          ),
+          tabBarIcon: ({focused}) =>
+            focused ? (
+              <View
+                style={{
+                  padding: scale(7, 'w'),
+                  backgroundColor: CUSTOM_COLORS.hover,
+                  borderRadius: scale(50, 'h'),
+                }}>
+                <IC_InforLine />
+              </View>
+            ) : (
+              <View>
+                <IC_InforLine />
+              </View>
+            ),
         }}
       />
     </Tab.Navigator>
@@ -130,7 +147,13 @@ export default function AppStack() {
       <Stack.Screen
         name="HomeTabs"
         component={HomeTabs}
-        options={{headerShown: false}}></Stack.Screen>
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="InforScreen"
+        component={IntroduceScreen}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 }

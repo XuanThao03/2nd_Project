@@ -16,96 +16,91 @@ import {
   useCameraPermission,
   useFrameProcessor,
   runAtTargetFps,
-  useSkiaFrameProcessor
+  useSkiaFrameProcessor,
 } from 'react-native-vision-camera';
 import {
   Tensor,
   TensorflowModel,
   useTensorflowModel,
-} from 'react-native-fast-tflite'
-import { useResizePlugin } from 'vision-camera-resize-plugin'
+} from 'react-native-fast-tflite';
+import {useResizePlugin} from 'vision-camera-resize-plugin';
 import HomeScreen from './home_screen';
 
-
 function tensorToString(tensor: Tensor): string {
-  return `\n  - ${tensor.dataType} ${tensor.name}[${tensor.shape}]`
+  return `\n  - ${tensor.dataType} ${tensor.name}[${tensor.shape}]`;
 }
 function modelToString(model: TensorflowModel): string {
   return (
     `TFLite Model (${model.delegate}):\n` +
     `- Inputs: ${model.inputs.map(tensorToString).join('')}\n` +
     `- Outputs: ${model.outputs.map(tensorToString).join('')}`
-  )
+  );
 }
 
-const classes = ["call",
-  "dislike",
-  "fist",
-  "four",
-  "like",
-  "mute",
-  "ok",
-  "one",
-  "palm",
-  "peace",
-  "peace_inverted",
-  "rock",
-  "stop",
-  "stop_inverted",
-  "three",
-  "three2",
-  "two_up",
-  "two_up_inverted",
-  "no_gesture"];
+const classes = [
+  'call',
+  'dislike',
+  'fist',
+  'four',
+  'like',
+  'mute',
+  'ok',
+  'one',
+  'palm',
+  'peace',
+  'peace_inverted',
+  'rock',
+  'stop',
+  'stop_inverted',
+  'three',
+  'three2',
+  'two_up',
+  'two_up_inverted',
+  'no_gesture',
+];
 
 const GameScreen = () => {
-  const { hasPermission, requestPermission } = useCameraPermission()
+  const {hasPermission, requestPermission} = useCameraPermission();
   const device = useCameraDevice('back');
   if (!hasPermission) return <HomeScreen />;
 
-
-  const model = useTensorflowModel(require('../assets/model/HG_gelan_c_10ep_best_striped_float16.tflite'))
-  const actualModel = model.state === 'loaded' ? model.model : undefined
-
-  React.useEffect(() => {
-    if (actualModel == null) return
-    console.log(`Model loaded! Shape:\n${modelToString(actualModel)}]`)
-  }, [actualModel])
-
-  const { resize } = useResizePlugin()
-
-  const frameProcessor = useFrameProcessor(
-    (frame) => {
-      'worklet'
-      if (actualModel == null) {
-        // model is still loading...
-        return
-      }
-      runAtTargetFps(60, () => {
-        'worklet'
-        console.log(`Running inference on ${frame}`)
-        const resized = resize(frame, {
-          scale: {
-            width: 640,
-            height: 640,
-          },
-          pixelFormat: 'rgb',
-          dataType: 'float32',
-        })
-        
-        const result = actualModel.runSync([resized])
-        console.log("result: " + result[0].length)
-      })
-    },
-    [actualModel]
-  )
+  const model = useTensorflowModel(
+    require('../assets/model/HG_gelan_c_10ep_best_striped_float16.tflite'),
+  );
+  const actualModel = model.state === 'loaded' ? model.model : undefined;
 
   React.useEffect(() => {
-    requestPermission()
-  }, [requestPermission])
+    if (actualModel == null) return;
+    console.log(`Model loaded! Shape:\n${modelToString(actualModel)}]`);
+  }, [actualModel]);
 
-  console.log(`Model: ${model.state} (${model.model != null})`)
+  const {resize} = useResizePlugin();
 
+  const frameProcessor = useSkiaFrameProcessor(frame => {
+    'worklet';
+    if (actualModel == null) {
+      // model is still loading...
+      return;
+    }
+    console.log(`Running inference on ${frame}`);
+    const resized = resize(frame, {
+      scale: {
+        width: 640,
+        height: 640,
+      },
+      pixelFormat: 'rgb',
+      dataType: 'float32',
+    });
+
+    const result = actualModel.runSync([resized]);
+    console.log('result: ' + result[0].length);
+    frame.render();
+  }, []);
+  React.useEffect(() => {
+    requestPermission();
+  }, [requestPermission]);
+
+  console.log(`Model: ${model.state} (${model.model != null})`);
 
   if (device == null) return <HomeScreen />;
   return (
@@ -118,11 +113,10 @@ const GameScreen = () => {
         <Camera
           outputOrientation="device"
           video={true}
-          style={StyleSheet.absoluteFill}
+          style={styles.camera}
           device={device}
           isActive={true}
           frameProcessor={frameProcessor}
-          
         />
       </ImageBackground>
     </SafeAreaView>
@@ -158,5 +152,6 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
+    backgroundColor: 'yellow',
   },
 });
